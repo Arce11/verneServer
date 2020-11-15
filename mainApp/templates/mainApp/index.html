@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Índice</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'mainApp/index.css' %}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+    <script>
+    function link_to_monitor() {
+        rover_id = $("#rover_id").val();
+        alert(rover_id);
+        window.location.href = "/monitor/" + rover_id;
+    }
+    </script>
+</head>
+<body>
+
+<h1>¡Monitoriza tu rover lunar <br> desde cualquier lugar!</h1>
+
+<form onsubmit="link_to_monitor()">
+    <label>
+        <input type="search" id="rover_id" placeholder="Introduce ID de tu rover..." >
+    </label>
+    <i class="fa fa-search" onclick="link_to_monitor()"></i>
+</form>
+
+
+
+
+</body>
+</html>
