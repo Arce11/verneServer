@@ -45,7 +45,7 @@ Se detalla el proceso para descargar una VM con el mismo stack, para trabajo loc
    ```
    1. Crear archivo para HTTPS (`sudo nano verneServer-https-vhost.conf`) e introducir:
    ```
-      <IfDefine !IS_verneServer_LOADED>
+   <IfDefine !IS_verneServer_LOADED>
      Define IS_verneServer_LOADED
      WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
    </IfDefine>
