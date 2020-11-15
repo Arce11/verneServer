@@ -10,9 +10,10 @@
 
     <script>
     function link_to_monitor() {
-        rover_id = $("#rover_id").val();
-        alert(rover_id);
-        window.location.href = "/monitor/" + rover_id;
+        let rover_id = $("#rover_id").val();
+        if (rover_id !== ""){
+            window.location.href = "/monitor/" + rover_id;
+        }
     }
     </script>
 </head>
