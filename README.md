@@ -17,8 +17,62 @@ Se detalla el proceso para descargar una VM con el mismo stack, para trabajo loc
    1. OJO(2): Por defecto, la VM tiene distribución de teclado de EEUU, importante de cara a caracteres raros en la contraseña
 1. Comprobar correcta instalación: desde la máquina anfitrión, entrar en un navegador cualquiera a la dirección localhost (asumiendo que se usa NAT, o la IP de la máquina si se tiene como adaptador puente). Debería accederse a la web de bienvenida de Bitnami
 1. Habilitar SSH para conectarse desde PuTTy (en mi opinión mucho más cómodo que directamente desde VirtualBox). Instrucciones: https://docs.bitnami.com/virtual-machine/faq/get-started/enable-ssh/
-
 1. (Recomendado, salvo que te manejes con vim) Instalar nano: sudo apt-get install nano
+1. Configuración de WSGI y hosts virtuales en apache
+   1. `cd /opt/bitnami/apache2/conf/vhosts`
+   1. Crear archivo para HTTP (`sudo nano verneServer-http-vhost.conf`) e introducir:
+   ```
+   <IfDefine !IS_verneServer_LOADED>
+     Define IS_verneServer_LOADED
+     WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
+   </IfDefine>
+   <VirtualHost 127.0.0.1:80 _default_:80>
+     ServerAlias *
+     WSGIProcessGroup verneServer
+     Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
+     Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
+     Alias /static/ /opt/bitnami/projects/verneServer/static/
+     <Directory /opt/bitnami/projects/verneServer/static>
+       Require all granted
+     </Directory>
+     WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
+     <Directory /opt/bitnami/projects/verneServer/verneServer>
+       <Files wsgi.py>
+         Require all granted
+       </Files>
+     </Directory>
+   </VirtualHost>
+   ```
+   1. Crear archivo para HTTPS (`sudo nano verneServer-https-vhost.conf`) e introducir:
+   ```
+      <IfDefine !IS_verneServer_LOADED>
+     Define IS_verneServer_LOADED
+     WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
+   </IfDefine>
+   <VirtualHost 127.0.0.1:443 _default_:443>
+     ServerAlias *
+     SSLEngine on
+     SSLCertificateFile "/opt/bitnami/apache2/conf/bitnami/certs/server.crt"
+     SSLCertificateKeyFile "/opt/bitnami/apache2/conf/bitnami/certs/server.key"
+     WSGIProcessGroup verneServer
+     Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
+     Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
+     Alias /static/ /opt/bitnami/projects/verneServer/static/
+     <Directory /opt/bitnami/projects/verneServer/static>
+       Require all granted
+     </Directory>
+     WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
+     <Directory /opt/bitnami/projects/verneServer/verneServer>
+       <Files wsgi.py>
+         Require all granted
+       </Files>
+     </Directory>
+   </VirtualHost>
+   ```
+   1. Ahora debería ser accesible el proyecto en el puerto 80
+   ¡OJO! Para ver cambios es necesario reiniciar apache: ```sudo nano verneServer-https-vhost.conf```
+   Por ello, para desarrollar rápido puede ser más cómodo usar el servidor de desarrollo integrado en Django, aunque por ahora me ha dado problemas para accederlo externamente
+
 
 ## Configuración de repositorio
 Instalación de repositorio en VM
