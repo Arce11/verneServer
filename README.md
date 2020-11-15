@@ -1,7 +1,16 @@
 # verneServer
 Servidor Django para el proyecto Verne. Basado en el stack Django + Apache de Bitnami, que será desplegado sobre una máquina en la nube posteriormente.
 
-# Instrucciones (despliegue local para desarrollo)
+# Instrucciones de uso
+Se listan a continuación comandos y cuestiones a tener en cuenta:
+   * Al modificar el código o ficheros del servidor, es necesario reiniciar apache:
+   
+      ```sudo /opt/bitnami/ctlscript.sh restart apache```
+   * Los ficheros estáticos (CSS, imágenes...) deben modificarse SÓLO en la carpeta `static/` de la aplicación a la que pertenecen (en este caso, `mainApp`). Tras modificarlos, deben recolectarse nuevamente en la carpeta `static` global:
+   
+      ```python manage.py collectstatic  --noinput```
+
+# Instrucciones de despliegue
 Se detalla el proceso para descargar una VM con el mismo stack, para trabajo local y desarrollo del servidor.
 
 ## Obtención y configuración de VM
@@ -69,9 +78,8 @@ Se detalla el proceso para descargar una VM con el mismo stack, para trabajo loc
      </Directory>
    </VirtualHost>
    ```
-   1. Ahora debería ser accesible el proyecto en el puerto 80
-   ¡OJO! Para ver cambios es necesario reiniciar apache: ```sudo nano verneServer-https-vhost.conf```
-   Por ello, para desarrollar rápido puede ser más cómodo usar el servidor de desarrollo integrado en Django, aunque por ahora me ha dado problemas para accederlo externamente
+   1. Ahora debería ser accesible el proyecto en el puerto 80.
+   ¡OJO! Para ver cambios es necesario reiniciar apache: ```sudo /opt/bitnami/ctlscript.sh restart apache```.
 
 
 ## Configuración de repositorio
