@@ -9,6 +9,10 @@ Se listan a continuación comandos y cuestiones a tener en cuenta:
    * Los ficheros estáticos (CSS, imágenes...) deben modificarse SÓLO en la carpeta `static/` de la aplicación a la que pertenecen (en este caso, `mainApp`). Tras modificarlos, deben recolectarse nuevamente en la carpeta `static` global:
    
       ```python manage.py collectstatic  --noinput```
+      
+  * Súper usuario existente:
+    * Usuario: `verne`
+    * Contraseña: `raspvernepi`
 
 # Instrucciones de despliegue
 Se detalla el proceso para descargar una VM con el mismo stack, para trabajo local y desarrollo del servidor.
@@ -86,11 +90,14 @@ Se detalla el proceso para descargar una VM con el mismo stack, para trabajo loc
 Instalación de repositorio en VM
 
 1. Crear carpeta de proyectos:
-   1. sudo mkdir /opt/bitnami/projects
-   1. sudo chown $USER /opt/bitnami/projects
+   1. `sudo mkdir /opt/bitnami/projects`
+   1. `sudo chown $USER /opt/bitnami/projects`
 1. Crear carpeta para este proyecto:
-   1. mkdir /opt/bitnami/projects/verneServer
-1. Se podría clonar directamente el repositorio en este directorio (git clone url_de_repositorio), pero recomiendo establecerlo como punto de despliegue desde PyCharm (como con la Raspberry Pi) para subidas automáticas de cada cambio
+   1. `mkdir /opt/bitnami/projects/verneServer`
+1. Configuración de permisos, dando permiso a apache para lectura, escritura y ejecución de Django:
+   1. `sudo chown -R daemon:daemon /opt/bitnami/projects/verneServer/`
+   1. `sudo chmod -R 764 /opt/bitnami/projects/verneServer/`
+1. Se podría clonar directamente el repositorio en este directorio (`git clone url_de_repositorio`), pero recomiendo establecerlo como punto de despliegue desde PyCharm (como con la Raspberry Pi) para subidas automáticas de cada cambio
 
 
 ## Configuración de PyCharm
