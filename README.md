@@ -13,6 +13,10 @@ Se listan a continuación comandos y cuestiones a tener en cuenta:
   * Súper usuario existente:
     * Usuario: `verne`
     * Contraseña: `raspvernepi`
+    
+  * Al modificar un modelo (o añadirlo):
+    * `python manage.py makemigrations`
+    * `python manage.py migrate`
 
 # Instrucciones de despliegue
 Se detalla el proceso para descargar una VM con el mismo stack, para trabajo local y desarrollo del servidor.
@@ -100,6 +104,7 @@ Instalación de repositorio en VM
    1. `sudo chown -R daemon:daemon /opt/bitnami/projects/verneServer/`
    1. `sudo chmod -R 774 /opt/bitnami/projects/verneServer/`
    1. `sudo reboot`
+1. Dependencias: `pip install -r requirements.txt`
 1. Se podría clonar directamente el repositorio en este directorio (`git clone url_de_repositorio`), pero recomiendo establecerlo como punto de despliegue desde PyCharm (como con la Raspberry Pi) para subidas automáticas de cada cambio
 
 
