@@ -95,8 +95,11 @@ Instalación de repositorio en VM
 1. Crear carpeta para este proyecto:
    1. `mkdir /opt/bitnami/projects/verneServer`
 1. Configuración de permisos, dando permiso a apache para lectura, escritura y ejecución de Django:
+   1. `sudo groupadd daemon`
+   1. `sudo usermod -a -G daemon bitnami`
    1. `sudo chown -R daemon:daemon /opt/bitnami/projects/verneServer/`
-   1. `sudo chmod -R 764 /opt/bitnami/projects/verneServer/`
+   1. `sudo chmod -R 774 /opt/bitnami/projects/verneServer/`
+   1. `sudo reboot`
 1. Se podría clonar directamente el repositorio en este directorio (`git clone url_de_repositorio`), pero recomiendo establecerlo como punto de despliegue desde PyCharm (como con la Raspberry Pi) para subidas automáticas de cada cambio
 
 
