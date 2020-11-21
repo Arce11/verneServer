@@ -1,7 +1,7 @@
 # verneServer
 Servidor Django para el proyecto Verne. Basado en el stack Django + Apache de Bitnami, que será desplegado sobre una máquina en la nube posteriormente.
 
-# Instrucciones de uso
+# Instrucciones para el desarrollo
 Se listan a continuación comandos y cuestiones a tener en cuenta:
    * Al modificar el código o ficheros del servidor, es necesario reiniciar apache:
    
@@ -9,6 +9,26 @@ Se listan a continuación comandos y cuestiones a tener en cuenta:
    * Los ficheros estáticos (CSS, imágenes...) deben modificarse SÓLO en la carpeta `static/` de la aplicación a la que pertenecen (en este caso, `mainApp`). Tras modificarlos, deben recolectarse nuevamente en la carpeta `static` global:
    
       ```python manage.py collectstatic  --noinput```
+      
+  * Súper usuario existente:
+    * Usuario: `verne`
+    * Contraseña: `raspvernepi`
+    
+  * Al modificar un modelo (o añadirlo):
+    * `python manage.py makemigrations`
+    * `python manage.py migrate`
+    
+# Instrucciones para pruebas
+Para probar la interfaz web, basta con navegar a la IP de la máquina en que esté alojado el servidor. Sin embargo, para probar la API es necesario poder enviar diferentes peticiones HTTP. Se listan algunos comandos a continuación, como referencia de uso:
+  * Petición PUT
+  ```
+  curl -v --header "Content-Type: application/json" \
+  --request PUT \
+  --data '{"rover_id":"ROVERID","address":"1.2.3.4"}' \
+  http://localhost/api/rover
+  ```
+  
+  * Petición GET: lo más sencillo es visualizarlo en el navegador, accediendo a una URL como: `http://localhost/api/session?session_id=2323423`
 
 # Instrucciones de despliegue
 Se detalla el proceso para descargar una VM con el mismo stack, para trabajo local y desarrollo del servidor.
@@ -30,54 +50,62 @@ Se detalla el proceso para descargar una VM con el mismo stack, para trabajo loc
 1. Configuración de WSGI y hosts virtuales en apache
    1. `cd /opt/bitnami/apache2/conf/vhosts`
    1. Crear archivo para HTTP (`sudo nano verneServer-http-vhost.conf`) e introducir:
-   ```
-   <IfDefine !IS_verneServer_LOADED>
-     Define IS_verneServer_LOADED
-     WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
-   </IfDefine>
-   <VirtualHost 127.0.0.1:80 _default_:80>
-     ServerAlias *
-     WSGIProcessGroup verneServer
-     Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
-     Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
-     Alias /static/ /opt/bitnami/projects/verneServer/static/
-     <Directory /opt/bitnami/projects/verneServer/static>
-       Require all granted
-     </Directory>
-     WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
-     <Directory /opt/bitnami/projects/verneServer/verneServer>
-       <Files wsgi.py>
-         Require all granted
-       </Files>
-     </Directory>
-   </VirtualHost>
-   ```
+```
+<IfDefine !IS_verneServer_LOADED>
+  Define IS_verneServer_LOADED
+  WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
+</IfDefine>
+<VirtualHost 127.0.0.1:80 _default_:80>
+  ServerAlias *
+  WSGIProcessGroup verneServer
+  Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
+  Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
+  Alias /static/ /opt/bitnami/projects/verneServer/static/
+  <Directory /opt/bitnami/projects/verneServer/static>
+    Require all granted
+  </Directory>
+  Alias /media/ /opt/bitnami/projects/verneServer/media/
+  <Directory /opt/bitnami/projects/verneServer/media/>
+    Require all granted
+  </Directory>
+  WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
+  <Directory /opt/bitnami/projects/verneServer/verneServer>
+    <Files wsgi.py>
+      Require all granted
+    </Files>
+  </Directory>
+</VirtualHost>
+```
    1. Crear archivo para HTTPS (`sudo nano verneServer-https-vhost.conf`) e introducir:
-   ```
-   <IfDefine !IS_verneServer_LOADED>
-     Define IS_verneServer_LOADED
-     WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
-   </IfDefine>
-   <VirtualHost 127.0.0.1:443 _default_:443>
-     ServerAlias *
-     SSLEngine on
-     SSLCertificateFile "/opt/bitnami/apache2/conf/bitnami/certs/server.crt"
-     SSLCertificateKeyFile "/opt/bitnami/apache2/conf/bitnami/certs/server.key"
-     WSGIProcessGroup verneServer
-     Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
-     Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
-     Alias /static/ /opt/bitnami/projects/verneServer/static/
-     <Directory /opt/bitnami/projects/verneServer/static>
-       Require all granted
-     </Directory>
-     WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
-     <Directory /opt/bitnami/projects/verneServer/verneServer>
-       <Files wsgi.py>
-         Require all granted
-       </Files>
-     </Directory>
-   </VirtualHost>
-   ```
+```
+<IfDefine !IS_verneServer_LOADED>
+  Define IS_verneServer_LOADED
+  WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/op$
+</IfDefine>
+<VirtualHost 127.0.0.1:443 _default_:443>
+  ServerAlias *
+  SSLEngine on
+  SSLCertificateFile "/opt/bitnami/apache2/conf/bitnami/certs/server.crt"
+  SSLCertificateKeyFile "/opt/bitnami/apache2/conf/bitnami/certs/server.key"
+  WSGIProcessGroup verneServer
+  Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
+  Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
+  Alias /static/ /opt/bitnami/projects/verneServer/static/
+  <Directory /opt/bitnami/projects/verneServer/static>
+    Require all granted
+  </Directory>
+  Alias /media/ /opt/bitnami/projects/verneServer/media/
+  <Directory /opt/bitnami/projects/verneServer/media/>
+    Require all granted
+  </Directory>
+  WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
+  <Directory /opt/bitnami/projects/verneServer/verneServer>
+    <Files wsgi.py>
+      Require all granted
+    </Files>
+  </Directory>
+</VirtualHost>
+```
    1. Ahora debería ser accesible el proyecto en el puerto 80.
    ¡OJO! Para ver cambios es necesario reiniciar apache: ```sudo /opt/bitnami/ctlscript.sh restart apache```.
 
@@ -86,11 +114,18 @@ Se detalla el proceso para descargar una VM con el mismo stack, para trabajo loc
 Instalación de repositorio en VM
 
 1. Crear carpeta de proyectos:
-   1. sudo mkdir /opt/bitnami/projects
-   1. sudo chown $USER /opt/bitnami/projects
+   1. `sudo mkdir /opt/bitnami/projects`
+   1. `sudo chown $USER /opt/bitnami/projects`
 1. Crear carpeta para este proyecto:
-   1. mkdir /opt/bitnami/projects/verneServer
-1. Se podría clonar directamente el repositorio en este directorio (git clone url_de_repositorio), pero recomiendo establecerlo como punto de despliegue desde PyCharm (como con la Raspberry Pi) para subidas automáticas de cada cambio
+   1. `mkdir /opt/bitnami/projects/verneServer`
+1. Configuración de permisos, dando permiso a apache para lectura, escritura y ejecución de Django:
+   1. `sudo groupadd daemon`
+   1. `sudo usermod -a -G daemon bitnami`
+   1. `sudo chown -R daemon:daemon /opt/bitnami/projects/verneServer/`
+   1. `sudo chmod -R 774 /opt/bitnami/projects/verneServer/`
+   1. `sudo reboot`
+1. Dependencias: `pip install -r requirements.txt`
+1. Se podría clonar directamente el repositorio en este directorio (`git clone url_de_repositorio`), pero recomiendo establecerlo como punto de despliegue desde PyCharm (como con la Raspberry Pi) para subidas automáticas de cada cambio
 
 
 ## Configuración de PyCharm
