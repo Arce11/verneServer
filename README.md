@@ -38,54 +38,62 @@ Se detalla el proceso para descargar una VM con el mismo stack, para trabajo loc
 1. Configuración de WSGI y hosts virtuales en apache
    1. `cd /opt/bitnami/apache2/conf/vhosts`
    1. Crear archivo para HTTP (`sudo nano verneServer-http-vhost.conf`) e introducir:
-   ```
-   <IfDefine !IS_verneServer_LOADED>
-     Define IS_verneServer_LOADED
-     WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
-   </IfDefine>
-   <VirtualHost 127.0.0.1:80 _default_:80>
-     ServerAlias *
-     WSGIProcessGroup verneServer
-     Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
-     Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
-     Alias /static/ /opt/bitnami/projects/verneServer/static/
-     <Directory /opt/bitnami/projects/verneServer/static>
-       Require all granted
-     </Directory>
-     WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
-     <Directory /opt/bitnami/projects/verneServer/verneServer>
-       <Files wsgi.py>
-         Require all granted
-       </Files>
-     </Directory>
-   </VirtualHost>
-   ```
+```
+<IfDefine !IS_verneServer_LOADED>
+  Define IS_verneServer_LOADED
+  WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
+</IfDefine>
+<VirtualHost 127.0.0.1:80 _default_:80>
+  ServerAlias *
+  WSGIProcessGroup verneServer
+  Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
+  Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
+  Alias /static/ /opt/bitnami/projects/verneServer/static/
+  <Directory /opt/bitnami/projects/verneServer/static>
+    Require all granted
+  </Directory>
+  Alias /media/ /opt/bitnami/projects/verneServer/media/
+  <Directory /opt/bitnami/projects/verneServer/media/>
+    Require all granted
+  </Directory>
+  WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
+  <Directory /opt/bitnami/projects/verneServer/verneServer>
+    <Files wsgi.py>
+      Require all granted
+    </Files>
+  </Directory>
+</VirtualHost>
+```
    1. Crear archivo para HTTPS (`sudo nano verneServer-https-vhost.conf`) e introducir:
-   ```
-   <IfDefine !IS_verneServer_LOADED>
-     Define IS_verneServer_LOADED
-     WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/opt/bitnami/projects/verneServer
-   </IfDefine>
-   <VirtualHost 127.0.0.1:443 _default_:443>
-     ServerAlias *
-     SSLEngine on
-     SSLCertificateFile "/opt/bitnami/apache2/conf/bitnami/certs/server.crt"
-     SSLCertificateKeyFile "/opt/bitnami/apache2/conf/bitnami/certs/server.key"
-     WSGIProcessGroup verneServer
-     Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
-     Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
-     Alias /static/ /opt/bitnami/projects/verneServer/static/
-     <Directory /opt/bitnami/projects/verneServer/static>
-       Require all granted
-     </Directory>
-     WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
-     <Directory /opt/bitnami/projects/verneServer/verneServer>
-       <Files wsgi.py>
-         Require all granted
-       </Files>
-     </Directory>
-   </VirtualHost>
-   ```
+```
+<IfDefine !IS_verneServer_LOADED>
+  Define IS_verneServer_LOADED
+  WSGIDaemonProcess verneServer python-home=/opt/bitnami/python python-path=/op$
+</IfDefine>
+<VirtualHost 127.0.0.1:443 _default_:443>
+  ServerAlias *
+  SSLEngine on
+  SSLCertificateFile "/opt/bitnami/apache2/conf/bitnami/certs/server.crt"
+  SSLCertificateKeyFile "/opt/bitnami/apache2/conf/bitnami/certs/server.key"
+  WSGIProcessGroup verneServer
+  Alias /robots.txt /opt/bitnami/projects/verneServer/static/robots.txt
+  Alias /favicon.ico /opt/bitnami/projects/verneServer/static/favicon.ico
+  Alias /static/ /opt/bitnami/projects/verneServer/static/
+  <Directory /opt/bitnami/projects/verneServer/static>
+    Require all granted
+  </Directory>
+  Alias /media/ /opt/bitnami/projects/verneServer/media/
+  <Directory /opt/bitnami/projects/verneServer/media/>
+    Require all granted
+  </Directory>
+  WSGIScriptAlias / /opt/bitnami/projects/verneServer/verneServer/wsgi.py
+  <Directory /opt/bitnami/projects/verneServer/verneServer>
+    <Files wsgi.py>
+      Require all granted
+    </Files>
+  </Directory>
+</VirtualHost>
+```
    1. Ahora debería ser accesible el proyecto en el puerto 80.
    ¡OJO! Para ver cambios es necesario reiniciar apache: ```sudo /opt/bitnami/ctlscript.sh restart apache```.
 
