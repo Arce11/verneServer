@@ -16,7 +16,7 @@ def index(request):
 
 def monitor(request, rover_id):
     try:
-        rover = Rover.objects.get(rover_id=rover_id)
+        rover = Rover.objects.get(rover_id=rover_id)  # Only to check if it exists
         session_list = Session.objects.filter(rover_id=rover_id).order_by("-start_time")[:10]
         file_list = [{"filename": s.log_filename, "url": s.log.url} for s in session_list]
         return render(request, 'mainApp/monitor.html', context={'rover_id': rover_id, 'file_list': file_list})
