@@ -7,6 +7,7 @@
     <title>Monitorización</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
             integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
       integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'mainApp/monitor.css' %}">
@@ -19,10 +20,7 @@
             integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
             crossorigin="anonymous"></script>
 
-    {# CONSTANTS #}
-    <script>
-        var rover_id = '{{ rover_id }}';
-    </script>
+    {# Custom JS #}
     <script src="{% static 'mainApp/monitor.js' %}"></script>
 
 </head>
@@ -61,7 +59,7 @@
                 </div>
                 <div class="container">
                     <hr/>
-                    <button class="btn btn-danger" id="deleteButton" onclick="delete_rover(rover_id)"> Eliminar rover</button>
+                    <button class="btn btn-danger" id="deleteButton" onclick="deleteRover(roverID)"> Eliminar rover</button>
                 </div>
             </div>
         </div>
@@ -74,7 +72,7 @@
             <div class="card-header" id="headingOne">
                 <div class="mb-0">
                     <a class="btn" data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true" aria-controls="collapseOne">
-                        <i class="fas fa-bars float-left mt-1"></i><h5 class="float-right mx-3">Interacción con rover</h5>
+                        <i class="fas fa-bars float-left mt-2"></i><h4 class="float-right mx-3">Interacción con rover</h4>
                     </a>
                 </div>
             </div>
@@ -92,32 +90,218 @@
             <div class="card-header" id="headingTwo">
                 <div class="mb-0">
                     <a class="btn collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        <i class="fas fa-bars float-left mt-1"></i><h5 class="float-right mx-3">Monitorización gráfica</h5>
+                        <i class="fas fa-bars float-left mt-2"></i><h4 class="float-right mx-3">Monitorización gráfica</h4>
                     </a>
                 </div>
             </div>
             <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo">
                 <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Temperatura</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">GRÁFICA DE TEMPERATURA (PLACEHOLDER)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Presión atmosférica</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">GRÁFICA DE PRESIÓN (PLACEHOLDER)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                    <h5>Humedad</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">GRÁFICA DE HUMEDAD (PLACEHOLDER)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                    <h5>Altitud</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">GRÁFICA DE ALTITUD (PLACEHOLDER)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                    <h5>Posición</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">MAPA DE POSICIÓN (PLACEHOLDER)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                    <h5>Batería</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">INDICADOR DE BATERÍA (PLACEHOLDER)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
         </div>
+
+
         {#    --------------------- SECTION THREE: Raw data ------------------------- #}
         <hr/>
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-header" id="headingThree">
                 <div class="mb-0">
                     <a class="btn collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        <i class="fas fa-bars float-left mt-1"></i><h5 class="float-right mx-3">Monitorización numérica</h5>
+                        <i class="fas fa-bars float-left mt-2"></i><h4 class="float-right mx-3">Monitorización numérica</h4>
                     </a>
                 </div>
             </div>
             <div id="collapseThree" class="collapse show" aria-labelledby="headingThree">
                 <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+
+                    <div class="card mb-3" >
+                        <div class="card-header">
+                            <h5>Información de la sesión</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">  <!-- General data -->
+                                    <ul>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">ID Sesión:</p>
+                                                <code class="col-6 float-left" id="sessionIDField"> -- </code>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Estado:</p>
+                                                <p class="col-6 float-left" id="sessionStateField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Sub-estado:</p>
+                                                <p class="col-6" id="sessionSubStateField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Batería:</p>
+                                                <p class="col-6" id="batteryField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">RSSI baliza:</p>
+                                                <p class="col-6" id="rssiField">--</p>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="text-danger" id="errorList">   {# TODO: Error list #}
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                    <h5>Información de sensores</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Temperatura:</p>
+                                                <p class="col-6 float-left" id="temperatureField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Presión:</p>
+                                                <p class="col-6" id="pressureField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Humedad:</p>
+                                                <p class="col-6" id="humidityField">--</p>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                    <h5>Información de posición</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Latitud:</p>
+                                                <p class="col-6 float-left" id="latitudeField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Longitud:</p>
+                                                <p class="col-6 float-left" id="longitudeField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Altitud:</p>
+                                                <p class="col-6 float-left" id="altitudeField">--</p>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
+
     </div>
 
 </main>

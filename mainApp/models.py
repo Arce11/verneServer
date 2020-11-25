@@ -22,11 +22,21 @@ class Session(models.Model):
     session_id = models.CharField(max_length=30, primary_key=True, unique=True)
     rover_id = models.ForeignKey("mainApp.Rover", on_delete=models.CASCADE)
     temperature = models.FloatField(blank=True, null=True)
-    timestamp = models.FloatField(blank=True, null=True)
+    pressure = models.FloatField(blank=True, null=True)
+    humidity = models.FloatField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    altitude = models.FloatField(blank=True, null=True)
+    battery = models.FloatField(blank=True, null=True)
+    rssi = models.FloatField(blank=True, null=True)
+    session_state = models.CharField(max_length=30, blank=True, null=True)
+    session_substate = models.CharField(max_length=30, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now=True)
     start_time = models.DateTimeField(auto_now_add=True)
     log = models.FileField(upload_to='logs/', null=True, blank=True)
 
-    LOG_FIELDS = ["timestamp", "temperature"]
+    LOG_FIELDS = ["timestamp", "temperature", "pressure", "humidity", "latitude", "longitude", "altitude", "battery",
+                  "rssi", "session_state", "session_substate"]
 
     def __str__(self):
         return self.session_id
