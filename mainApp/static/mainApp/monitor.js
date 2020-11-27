@@ -7,12 +7,7 @@ const ROVER_ID = aux[aux.length -2];
 const MAX_RETRIES = 3;
 const MAX_POINTS_PER_GRAPH = 100;
 
-let TEMPERATURE_CANVAS;
-let PRESSURE_CANVAS;
-let HUMIDITY_CANVAS;
-let ALTITUDE_CANVAS;
 let BATTERY_CANVAS;
-
 
 // Internal variables
 let roverAddress = null;
@@ -52,11 +47,16 @@ let batteryGauge;
 // -------------------------- MAIN LOGIC ----------------------------------------
 
 window.onload = function(){
-    TEMPERATURE_CANVAS = document.getElementById("temperatureCanvas");
-    PRESSURE_CANVAS = document.getElementById("pressureCanvas");
-    HUMIDITY_CANVAS = document.getElementById("humidityCanvas");
-    ALTITUDE_CANVAS = document.getElementById("altitudeCanvas");
     BATTERY_CANVAS = document.getElementById("batteryCanvas");
+
+    let temperature_canvas = document.getElementById("temperatureCanvas");
+    let pressure_canvas = document.getElementById("pressureCanvas");
+    let humidity_canvas = document.getElementById("humidityCanvas");
+    let altitude_canvas = document.getElementById("altitudeCanvas");
+    temperatureChart = initializeChart(temperature_canvas, 'Tiempo desde inicio de sesión (s)', 'Temperatura (ºC)');
+    pressureChart = initializeChart(pressure_canvas, 'Tiempo desde inicio de sesión (s)', 'Presión (hPa)');
+    humidityChart = initializeChart(humidity_canvas, 'Tiempo desde inicio de sesión (s)', 'Humedad (%)');
+    altitudeChart = initializeChart(altitude_canvas, 'Tiempo desde inicio de sesión (s)', 'Altitud (m)', true);
     initializeSessionData();
     requestRoverData();
     setInterval(requestSessionData, 1100);
@@ -99,10 +99,10 @@ function initializeSessionData(){
 
 
     // Charts
-    temperatureChart = initializeChart(TEMPERATURE_CANVAS, 'Tiempo desde inicio de sesión (s)', 'Temperatura (ºC)');
-    pressureChart = initializeChart(PRESSURE_CANVAS, 'Tiempo desde inicio de sesión (s)', 'Presión (hPa)');
-    humidityChart = initializeChart(HUMIDITY_CANVAS, 'Tiempo desde inicio de sesión (s)', 'Humedad (%)');
-    altitudeChart = initializeChart(ALTITUDE_CANVAS, 'Tiempo desde inicio de sesión (s)', 'Altitud (m)', true);
+    deleteChartData(temperatureChart);
+    deleteChartData(pressureChart);
+    deleteChartData(humidityChart);
+    deleteChartData(altitudeChart);
     batteryGauge = redrawGauge(BATTERY_CANVAS, 0)
 }
 
@@ -150,6 +150,12 @@ function addChartData(chart, new_x, new_y){
     chart.data.datasets[0].data.push({x: new_x, y: new_y});
     if (num_points >= MAX_POINTS_PER_GRAPH)
         chart.data.datasets[0].data.shift();
+    chart.update();
+}
+
+
+function deleteChartData(chart){
+    chart.data.datasets[0].data = [];
     chart.update();
 }
 

@@ -5,7 +5,7 @@ import random
 # NOTA: trio Y httpx SON NECESARIOS PARA ESTE SCRIPT (NO LISTADOS EN requirements.txt)
 ROVER_ID = "virtual_verne123"
 ROVER_ADDRESS = "127.0.0.1"
-SESSION_ID = "asdfsfda89asfd9a0s08"
+SESSION_ID = "asdfsdfdfsdfsda5"
 SERVER_ADDRESS = "http://127.0.0.1/"
 
 session_params = {

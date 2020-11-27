@@ -54,7 +54,7 @@ class RoverAPI(View):
     def get(self, request):
         rovers = Rover.objects.all()
         serializer = RoverSerializer(rovers, many=True)
-        return JsonResponse(serializer.data)
+        return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
         data = JSONParser().parse(io.BytesIO(request.body))
