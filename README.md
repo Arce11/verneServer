@@ -124,7 +124,6 @@ Instalación de repositorio en VM
    1. `sudo chown -R daemon:daemon /opt/bitnami/projects/verneServer/`
    1. `sudo chmod -R 774 /opt/bitnami/projects/verneServer/`
    1. `sudo reboot`
-1. Dependencias: `pip install -r requirements.txt`
 1. Se podría clonar directamente el repositorio en este directorio (`git clone url_de_repositorio`), pero recomiendo establecerlo como punto de despliegue desde PyCharm (como con la Raspberry Pi) para subidas automáticas de cada cambio
 
 
@@ -142,5 +141,13 @@ Configuración para clonar el repositorio y establecer el directorio creado arri
    1. SSH Interpreter, host=localhost (asumiendo NAT en la VM), username=bitnami, password=...
    1. Interpreter: /opt/bitnami/python/bin/python
    1. Mappings: añadir uno al directorio creado antes ( /opt/bitnami/projects/verneServer )  OJO: podría estar ya añadido por defecto al haber configurado ya el despliegue
+1. Sincronizar todos los archivos con el repositorio: click derecho en la carpeta raíz del proyecto en PyCharm (verneServer) -> deployment -> upload to...
+1. Dependencias: (desde la carpeta del proyecto) `sudo pip install -r requirements.txt`
+   1. OJO: Utilizar sudo para modificar la instalación del sistema
+1. Sincronizar datos y reiniciar servidor:
+    * `python manage.py makemigrations`
+    * `python manage.py migrate`
+    * `python manage.py collectstatic  --noinput`
+    * `sudo /opt/bitnami/ctlscript.sh restart apache`
 
    
