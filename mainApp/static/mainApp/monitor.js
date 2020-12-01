@@ -176,7 +176,6 @@ function redrawGauge(canvas, degrees){
     ctx.stroke();
 
     //gauge will be a simple arc
-    //Angle in radians = angle in degrees * PI / 180
     let radians = degrees * Math.PI / 180;
     ctx.beginPath();
     ctx.strokeStyle = color;
@@ -184,18 +183,12 @@ function redrawGauge(canvas, degrees){
     //The arc starts from the rightmost end. If we deduct 90 degrees from the angles
     //the arc will start from the topmost end
     ctx.arc(width/2, height/2, 100, 0 - 90*Math.PI/180, radians - 90*Math.PI/180, false);
-    //you can see the arc now
     ctx.stroke();
 
-    //Lets add the text
     ctx.fillStyle = color;
     ctx.font = "50px open sans";
     let text = Math.round((battery !== null) ? battery : 0) + "%";
-    //Lets center the text
-    //deducting half of text width from position x
     let text_width = ctx.measureText(text).width;
-    //adding manual value to position y since the height of the text cannot
-    //be measured easily. There are hacks but we will keep it manual for now.
     ctx.fillText(text, width/2 - text_width/2, height/2 + 15);
 }
 
