@@ -134,7 +134,7 @@ class SpecificSessionAPI(View):
         for field in Session.LOG_FIELDS:
             field = Session._meta.get_field(field)
             value = field.value_from_object(new_s)
-            value = str(value) if value is not None else ""
+            value = str(value) if value is not None else "null"
             newline = newline + value + ";"
         newline = newline.rstrip(";") + "\n"
         with new_s.log.open("a") as f:
