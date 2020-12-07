@@ -6,6 +6,16 @@ let aux = window.location.href.split("/");
 const ROVER_ID = aux[aux.length -2];
 const MAX_RETRIES = 3;
 const MAX_POINTS_PER_GRAPH = 100;
+const START_LONGITUDE = -5.668035714754746;
+const START_LATITUDE = 43.53245365145571;
+const greenIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 let BATTERY_CANVAS;
 
@@ -36,6 +46,10 @@ let humidity;
 let latitude;
 let longitude;
 let altitude;
+let coordinate_vector = [];
+let marker_start = null;
+let marker_end = null;
+let polyline;
 
 // Chart canvas
 let temperatureChart;
@@ -43,10 +57,7 @@ let pressureChart;
 let humidityChart;
 let altitudeChart;
 let batteryGauge;
-let map_position;
-let initial_coord =[43.53037718011077, -5.669762979443579];
-let end_coord=[43.52940122542376, -5.661973088851047];
-let coordenadas=[initial_coord,end_coord];
+let map;
 
 // -------------------------- MAIN LOGIC ----------------------------------------
 
@@ -57,12 +68,13 @@ window.onload = function(){
     let pressure_canvas = document.getElementById("pressureCanvas");
     let humidity_canvas = document.getElementById("humidityCanvas");
     let altitude_canvas = document.getElementById("altitudeCanvas");
-    let map = document.getElementById("map");
+    let map_canvas = document.getElementById("mapCanvas");
     temperatureChart = initializeChart(temperature_canvas, 'Tiempo desde inicio de sesión (s)', 'Temperatura (ºC)');
     pressureChart = initializeChart(pressure_canvas, 'Tiempo desde inicio de sesión (s)', 'Presión (hPa)');
     humidityChart = initializeChart(humidity_canvas, 'Tiempo desde inicio de sesión (s)', 'Humedad (%)');
     altitudeChart = initializeChart(altitude_canvas, 'Tiempo desde inicio de sesión (s)', 'Altitud (m)', true);
-    map_position=initializeMap(map,coordenadas);
+    console.log(`ROVER_ID: ${ROVER_ID}, ROVER_URL: ${ROVER_URL}`)
+    initializeMap(map_canvas);
     initializeSessionData();
     requestRoverData();
     setInterval(requestSessionData, 1100);
@@ -73,29 +85,6 @@ window.onload = function(){
 
 
 // ----------------------------------------------------------------------------
-
-
-function initializeMap(map,coordenadas){
-    console.log("inicializando mapa");
-    console.log("deberia de init mapa");
-
-    map_position=L.map(map, {
-        center: coordenadas[0],
-        zoom: 17,
-        maxBounds: coordenadas[0],
-        minZoom: 5,
-        maxZoom: 24 });
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-                maxZoom: 40,
-                maxNativeZoom: 19
-            }).addTo(map_position);
-    L.control.scale().addTo(map_position);
-
-
-    return map_position
-
-}
 
 
 function initializeSessionData(){
@@ -115,6 +104,7 @@ function initializeSessionData(){
     battery_degrees = null;
     rssi = null;
     error_list = [];  // TODO: Error list
+    coordinate_vector.splice(0, coordinate_vector.length);  // Empty the coordinate vector
 
     // Sensor information
     temperature = 1;
@@ -132,7 +122,8 @@ function initializeSessionData(){
     deleteChartData(pressureChart);
     deleteChartData(humidityChart);
     deleteChartData(altitudeChart);
-    batteryGauge = redrawGauge(BATTERY_CANVAS, 0)
+    resetMap();
+    batteryGauge = redrawGauge(BATTERY_CANVAS, 0);
 }
 
 
@@ -223,6 +214,89 @@ function redrawGauge(canvas, degrees){
     ctx.fillText(text, width/2 - text_width/2, height/2 + 15);
 }
 
+function initializeMap(map_canvas) {
+    console.log('Initializing map...');
+    map = L.map(map_canvas, {
+        center: [START_LATITUDE, START_LONGITUDE],
+        zoom: 17,
+        minZoom: 5,
+        maxZoom: 24
+    });
+
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+        maxZoom: 40,
+        maxNativeZoom: 19
+    }).addTo(map);
+    L.control.scale().addTo(map);
+    polyline = L.polyline(coordinate_vector, {
+        color: 'red',
+        dashArray: "5,10",
+        weight: 1
+    }).addTo(map);
+
+    map.whenReady(() => {
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 0);
+    });
+}
+
+function reshapeMap(){
+    // Required to adapt to dropdown menu visibility (stupid map...)
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 0);
+}
+
+function resetMap(){
+    if (marker_start !== null) {
+        map.removeLayer(marker_start);
+        marker_start = null;
+    }
+    if (marker_end !== null) {
+        map.removeLayer(marker_end);
+        marker_end = null;
+    }
+    map.removeLayer(polyline);
+    polyline = L.polyline([], {
+        color: 'red',
+        dashArray: "5,10",
+        weight: 1
+    }).addTo(map);
+
+}
+
+function updateMap(){
+    coordinate_vector.push([latitude, longitude]);
+    if (coordinate_vector.length > MAX_POINTS_PER_GRAPH)
+        coordinate_vector.shift();
+    // Remove polyline and generate a new, updated one
+    map.removeLayer(polyline);
+    polyline = L.polyline(coordinate_vector, {
+        color: 'red',
+        dashArray: "5,10",
+        weight: 1
+    }).addTo(map);
+    // Map centering
+    map.fitBounds([coordinate_vector]);
+    // Deal with markers
+    if (coordinate_vector.length === 1){
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 0);
+        marker_start = L.marker(coordinate_vector[0],{draggable: true, icon: greenIcon}).addTo(map);
+    }
+    else if (coordinate_vector.length === 2){
+        marker_end = L.marker(coordinate_vector[1],{draggable: true}).addTo(map);
+    }
+    else if (coordinate_vector.length > 2){
+        console.log(`Longer than 2: ${coordinate_vector}`);
+        marker_start.setLatLng(coordinate_vector[0]).update();
+        marker_end.setLatLng(coordinate_vector[coordinate_vector.length-1]).update();
+    }
+}
+
 
 function loadInteractionSection(){  // TODO: Interaction section
 
@@ -294,7 +368,10 @@ function updateCharts(){
     addChartData(pressureChart, timestamp_relative, pressure);
     addChartData(humidityChart, timestamp_relative, humidity);
     addChartData(altitudeChart, timestamp_relative, altitude);
-    redrawGauge(BATTERY_CANVAS, Math.round(battery*360/100));
+    if (battery !== null)
+        redrawGauge(BATTERY_CANVAS, Math.round(battery*360/100));
+    if (latitude !== null && longitude !== null)
+        updateMap();
 }
 
 
@@ -348,6 +425,10 @@ function deleteRover(rover_id){
         window.location.href = "/";
     }
 }
+
+
+
+
 
 
 

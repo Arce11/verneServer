@@ -5,7 +5,7 @@ import random
 # NOTA: trio Y httpx SON NECESARIOS PARA ESTE SCRIPT (NO LISTADOS EN requirements.txt)
 ROVER_ID = "virtual_verne123"
 ROVER_ADDRESS = "127.0.0.1"
-SESSION_ID = "asdfsdfdfsdfsda5"
+SESSION_ID = "asassdgfhhghhklksda5"
 SERVER_ADDRESS = "http://127.0.0.1/"
 
 session_params = {
@@ -67,7 +67,7 @@ async def launch_virtual_rover():
             print(f"\tUpdated pressure: {session_params['pressure']}")
             session_params['humidity'] = calculate_new_parameter(session_params['humidity'], 0, 2, 0, 100)
             print(f"\tUpdated humidity: {session_params['humidity']}")
-            session_params['latitude'] = calculate_new_parameter(session_params['latitude'], 0, 0.0001, 43.50, 43.5580)
+            session_params['latitude'] = calculate_new_parameter(session_params['latitude'], 0, 0.0005, 43.50, 43.5580)
             print(f"\tUpdated latitude: {session_params['latitude']}")
             session_params['longitude'] = calculate_new_parameter(session_params['longitude'], 0, 0.001, -5.9, -5.6)
             print(f"\tUpdated longitude: {session_params['longitude']}")
