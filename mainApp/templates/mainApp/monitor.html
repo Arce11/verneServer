@@ -21,11 +21,17 @@
             integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
             crossorigin="anonymous"></script>
 
+    {# LEAFLET #}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+
     {# Custom JS #}
     <script src="{% static 'mainApp/monitor.js' %}"></script>
     <script>
         let rover_id = '{{ rover_id }}';
     </script>
+
 </head>
 <body>
 <header>
@@ -148,7 +154,8 @@
                                     <h5>Posición</h5>
                                 </div>
                                 <div class="card-body">
-                                    <p class="card-text">MAPA DE POSICIÓN (PLACEHOLDER)</p>
+                                    <div id="map" width="400" height="400"></div>
+
                                 </div>
                             </div>
                         </div>

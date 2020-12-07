@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo mapa</title>
+    <style>
+        #map {
+        width: 100%;
+        height: 580px;
+        box-shadow: 5px 5px 5px #888;
+        }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+</head>
+<body>
+    <div id = 'map'>
+    </div>
+
+    <script>
+
+        let map;
+        let map_position;
+        let coordenadas =[43.53245365145571, -5.668035714754746];
+        let coordenadas_vect=[];
+        let latitude;
+        let longitud;
+        let marker_in;
+        let marker_fin;
+        let iteracion=1;
+
+
+
+      //funcion generadora de coordenadas
+
+        function getRandomCoord() {
+
+            var minLat=43.52;
+            var maxLat=43.56;
+            var minLong=-5.65;
+            var maxLong=-5.67;
+            latitude=Math.random() * (maxLat - minLat) + minLat;
+            console.log("ejecutando latitud",latitude)
+            longitud=Math.random() * (maxLong - minLong) + minLong
+            coordenadas = [latitude, longitud]
+            coordenadas_vect.push(coordenadas);
+            console.log("ejecutando longitud",longitud);
+            console.log("coordenadas",coordenadas);
+            console.log("vector de coordenadas",coordenadas_vect);
+            addmap(map_position,coordenadas,coordenadas_vect);
+
+
+        }
+
+        // funcion para añadir puntos al mapa y pintar ruta
+
+        function addmap(){
+
+            if(coordenadas!=null){
+
+               if(iteracion==1){
+
+                   marker_in=L.marker(coordenadas,{draggable: true}).addTo(map_position);
+
+               }
+              //L.marker(coordenadas,{draggable: true}).addTo(map_position);
+
+            }
+
+            if (coordenadas_vect.length!=null) {
+
+                L.polyline(coordenadas_vect, {
+                    color: 'red',
+                    dashArray: "5,10",
+                    weight: 1
+                }).addTo(map_position);
+                //centramos el mapa
+                map_position.fitBounds([coordenadas_vect]);
+                if(iteracion==2){
+
+                    
+
+                    marker_fin=L.marker(coordenadas,{
+                        draggable: true,
+
+
+                    }).addTo(map_position);
+
+                    
+                }
+                else if(iteracion>2){
+
+                    marker_fin.setLatLng(coordenadas)
+
+                }
+
+
+            }
+
+            iteracion=iteracion+1;
+
+
+        }
+
+
+        function initializeMap(map,coordenadas_vect){
+
+        map_position = L.map(map, {
+        center: coordenadas,
+        zoom: 17,
+        maxBounds: coordenadas,
+        minZoom: 5,
+        maxZoom: 24 });
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                maxZoom: 40,
+                maxNativeZoom: 19
+            }).addTo(map_position);
+        L.control.scale().addTo(map_position);
+
+        return map_position
+
+    }
+
+
+	window.onload = function(){
+
+
+    map = document.getElementById("map");
+
+
+
+    setInterval(getRandomCoord,3000);
+
+    map_position=initializeMap(map,coordenadas);
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+		
+		/*
+        var initial_coord =[43.53037718011077, -5.669762979443579];
+        var end_coord=[43.52940122542376, -5.661973088851047];
+        var coordenadas=[initial_coord,end_coord];
+        var map = L.map('map', {
+        center: coordenadas[0],
+        zoom: 17,
+        maxBounds: coordenadas[0],
+        minZoom: 5,
+        maxZoom: 24 });
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                maxZoom: 40,
+                maxNativeZoom: 19
+            }).addTo(map);
+        L.control.scale().addTo(map);
+        L.marker(initial_coord,{draggable: true}).addTo(map);
+        L.marker(end_coord,{draggable: true}).addTo(map);
+
+        var estiloruta =[{
+            "color" : "#ff/800",
+            "weight" : 5,
+            "opacity" : 0.65
+        }];
+
+        L.polyline([
+            coordenadas[0],
+            coordenadas[1]
+            ], {
+
+            dashArray: "5,10",
+            clickable: false
+
+            }).addTo(map);
+*/
+
+    </script>
+
+</body>
+</html>

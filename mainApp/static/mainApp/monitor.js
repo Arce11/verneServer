@@ -43,6 +43,10 @@ let pressureChart;
 let humidityChart;
 let altitudeChart;
 let batteryGauge;
+let map_position;
+let initial_coord =[43.53037718011077, -5.669762979443579];
+let end_coord=[43.52940122542376, -5.661973088851047];
+let coordenadas=[initial_coord,end_coord];
 
 // -------------------------- MAIN LOGIC ----------------------------------------
 
@@ -53,10 +57,12 @@ window.onload = function(){
     let pressure_canvas = document.getElementById("pressureCanvas");
     let humidity_canvas = document.getElementById("humidityCanvas");
     let altitude_canvas = document.getElementById("altitudeCanvas");
+    let map = document.getElementById("map");
     temperatureChart = initializeChart(temperature_canvas, 'Tiempo desde inicio de sesión (s)', 'Temperatura (ºC)');
     pressureChart = initializeChart(pressure_canvas, 'Tiempo desde inicio de sesión (s)', 'Presión (hPa)');
     humidityChart = initializeChart(humidity_canvas, 'Tiempo desde inicio de sesión (s)', 'Humedad (%)');
     altitudeChart = initializeChart(altitude_canvas, 'Tiempo desde inicio de sesión (s)', 'Altitud (m)', true);
+    map_position=initializeMap(map,coordenadas);
     initializeSessionData();
     requestRoverData();
     setInterval(requestSessionData, 1100);
@@ -67,6 +73,29 @@ window.onload = function(){
 
 
 // ----------------------------------------------------------------------------
+
+
+function initializeMap(map,coordenadas){
+    console.log("inicializando mapa");
+    console.log("deberia de init mapa");
+
+    map_position=L.map(map, {
+        center: coordenadas[0],
+        zoom: 17,
+        maxBounds: coordenadas[0],
+        minZoom: 5,
+        maxZoom: 24 });
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                maxZoom: 40,
+                maxNativeZoom: 19
+            }).addTo(map_position);
+    L.control.scale().addTo(map_position);
+
+
+    return map_position
+
+}
 
 
 function initializeSessionData(){
@@ -105,6 +134,8 @@ function initializeSessionData(){
     deleteChartData(altitudeChart);
     batteryGauge = redrawGauge(BATTERY_CANVAS, 0)
 }
+
+
 
 
 function initializeChart(canvas, xlabel=null, ylabel=null, fill=false){
