@@ -298,7 +298,9 @@ function updateMap(){
 }
 
 
-function loadInteractionSection(){  // TODO: Interaction section
+function loadInteractionSection(){  // TODO: Default page for empty rover address
+    let embeddedSection = document.getElementById("embeddedRover");
+    embeddedSection.setAttribute("src", `http://${roverAddress}`)
 
 }
 
