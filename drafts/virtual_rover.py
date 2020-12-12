@@ -14,11 +14,14 @@ session_params = {
     "temperature": 15,
     "pressure": 1013,
     "humidity": 70,
+    "num_satellites": 4,
     "latitude": 43.5322,
     "longitude": -5.6611,
     "altitude": 100,
     "battery": 100,
     "rssi": -40,
+    "motor_current": 1,
+    "message": "Astronauta virtual...",
     "session_state": "VIRTUAL",
     "session_substate": "virtual"
 }

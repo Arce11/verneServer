@@ -10,7 +10,6 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
       integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{% static 'mainApp/monitor.css' %}">
 
     {# BOOTSTRAP #}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
@@ -28,6 +27,9 @@
     <script>
         let rover_id = '{{ rover_id }}';
     </script>
+
+    {#  Custom CSS  #}
+    <link rel="stylesheet" type="text/css" href="{% static 'mainApp/monitor.css' %}">
 
 </head>
 <body>
@@ -226,7 +228,18 @@
                                                 <p class="col-6" id="rssiField">--</p>
                                             </div>
                                         </li>
-
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Corriente por motores:</p>
+                                                <p class="col-6" id="currentField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <p class="col-6">Último mensaje:</p>
+                                                <p class="col-6" id="messageField">--</p>
+                                            </div>
+                                        </li>
                                     </ul>
 
                                 </div>
@@ -282,6 +295,12 @@
                                     <ul>
                                         <li>
                                             <div class="row">
+                                                <p class="col-6">Número de satélites:</p>
+                                                <p class="col-6 float-left" id="numSatellitesField">--</p>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
                                                 <p class="col-6">Latitud:</p>
                                                 <p class="col-6 float-left" id="latitudeField">--</p>
                                             </div>
@@ -315,9 +334,9 @@
 </main>
 
 
-<footer class="footer mt-auto py-3">
+<footer class="footer mt-5 py-3">
     <div class="container">
-        <p class="text-muted">Proyecto VERNE</p>
+        <p class="text-muted">Máster en Ingeniería de Telecomunicación  -  Proyecto VERNE</p>
         <p class="text-muted">E. Estrada Escobio, J.R. García Meré, A. Gómez Álvarez</p>
     </div>
 </footer>

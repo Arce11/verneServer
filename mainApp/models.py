@@ -24,19 +24,22 @@ class Session(models.Model):
     temperature = models.FloatField(blank=True, null=True)
     pressure = models.FloatField(blank=True, null=True)
     humidity = models.FloatField(blank=True, null=True)
+    num_satellites = models.IntegerField(blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     altitude = models.FloatField(blank=True, null=True)
     battery = models.FloatField(blank=True, null=True)
     rssi = models.FloatField(blank=True, null=True)
+    motor_current = models.FloatField(blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
     session_state = models.CharField(max_length=30, blank=True, null=True)
     session_substate = models.CharField(max_length=30, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now=True)
     start_time = models.DateTimeField(auto_now_add=True)
     log = models.FileField(upload_to='logs/', null=True, blank=True)
 
-    LOG_FIELDS = ["timestamp", "temperature", "pressure", "humidity", "latitude", "longitude", "altitude", "battery",
-                  "rssi", "session_state", "session_substate"]
+    LOG_FIELDS = ["timestamp", "temperature", "pressure", "humidity", "num_satellites", "latitude", "longitude",
+                  "altitude", "battery", "rssi", "motor_current", "message", "session_state", "session_substate"]
 
     def __str__(self):
         return self.session_id

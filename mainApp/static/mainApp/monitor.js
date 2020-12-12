@@ -35,7 +35,9 @@ let session_state;
 let session_substate;
 let battery;
 let rssi;
+let motor_current;
 let error_list;
+let message;
 
 // Sensor information
 let temperature;
@@ -43,6 +45,7 @@ let pressure;
 let humidity;
 
 // Position information
+let num_satellites;
 let latitude;
 let longitude;
 let altitude;
@@ -103,15 +106,18 @@ function initializeSessionData(){
     battery = null;
     battery_degrees = null;
     rssi = null;
+    motor_current = null;
+    message = null;
     error_list = [];  // TODO: Error list
     coordinate_vector.splice(0, coordinate_vector.length);  // Empty the coordinate vector
 
     // Sensor information
-    temperature = 1;
+    temperature = null;
     pressure = null;
     humidity = null;
 
     // Position information
+    num_satellites = null;
     latitude = null;
     longitude = null;
     altitude = null;
@@ -301,7 +307,6 @@ function updateMap(){
 function loadInteractionSection(){  // TODO: Default page for empty rover address
     let embeddedSection = document.getElementById("embeddedRover");
     embeddedSection.setAttribute("src", `http://${roverAddress}`)
-
 }
 
 
@@ -328,9 +333,12 @@ function handleSessionJSON(new_json){
     session_substate = (new_json.session_substate !== undefined) ? new_json.session_substate : null;
     battery = (new_json.battery !== undefined) ? new_json.battery : null;
     rssi = (new_json.rssi !== undefined) ? new_json.rssi : null;
+    motor_current = (new_json.motor_current !== undefined) ? new_json.motor_current : null;
+    message = (new_json.message !== undefined) ? new_json.message : null;
     temperature = (new_json.temperature !== undefined) ? new_json.temperature : null;
     pressure = (new_json.pressure !== undefined) ? new_json.pressure : null;
     humidity = (new_json.humidity !== undefined) ? new_json.humidity : null;
+    num_satellites = (new_json.num_satellites !== undefined) ? new_json.num_satellites : null;
     latitude = (new_json.latitude !== undefined) ? new_json.latitude : null;
     longitude = (new_json.longitude !== undefined) ? new_json.longitude : null;
     altitude = (new_json.altitude !== undefined) ? new_json.altitude : null;
@@ -346,7 +354,10 @@ function populateSessionFields(){
     document.getElementById("sessionStateField").innerHTML = (session_state !== null) ? session_state : '--';
     document.getElementById("sessionSubStateField").innerHTML = (session_substate !== null) ? session_substate : '--';
     document.getElementById("batteryField").innerHTML = (battery !== null) ? battery.toFixed(1) + ' %' : '--';
-    document.getElementById("rssiField").innerHTML = (rssi !== null) ? rssi.toFixed(2) + ' dB' : '--';
+    document.getElementById("rssiField").innerHTML = (rssi !== null) ? rssi.toFixed(2) + ' dBm' : '--';
+    document.getElementById("currentField").innerHTML = (motor_current !== null) ? motor_current.toFixed(2) + ' A' : '--';
+    document.getElementById("messageField").innerHTML = (message !== null) ? `<emph>${message}</emph>` : '--';
+
     let error_content = "";
     for (let n=0; n < error_list.length; n++){
         error_content += "<li>" + error_list[n] + "</li>";
@@ -359,6 +370,7 @@ function populateSessionFields(){
     document.getElementById("humidityField").innerHTML = (humidity !== null) ? humidity.toFixed(1) + ' %' : '--';
 
     // Position information
+    document.getElementById("numSatellitesField").innerHTML = (latitude !== null) ? num_satellites.toFixed(0) : '--';
     document.getElementById("latitudeField").innerHTML = (latitude !== null) ? latitude.toFixed(6) + ' deg' : '--';
     document.getElementById("longitudeField").innerHTML = (longitude !== null) ? longitude.toFixed(6) + ' deg' : '--';
     document.getElementById("altitudeField").innerHTML = (altitude !== null) ? altitude.toFixed(2) + ' m' : '--';
