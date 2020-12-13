@@ -73,7 +73,7 @@ window.onload = function(){
     let altitude_canvas = document.getElementById("altitudeCanvas");
     let map_canvas = document.getElementById("mapCanvas");
     temperatureChart = initializeChart(temperature_canvas, 'Tiempo desde inicio de sesión (s)', 'Temperatura (ºC)');
-    pressureChart = initializeChart(pressure_canvas, 'Tiempo desde inicio de sesión (s)', 'Presión (hPa)');
+    pressureChart = initializeChart(pressure_canvas, 'Tiempo desde inicio de sesión (s)', 'Presión (mbar)');
     humidityChart = initializeChart(humidity_canvas, 'Tiempo desde inicio de sesión (s)', 'Humedad (%)');
     altitudeChart = initializeChart(altitude_canvas, 'Tiempo desde inicio de sesión (s)', 'Altitud (m)', true);
     console.log(`ROVER_ID: ${ROVER_ID}, ROVER_URL: ${ROVER_URL}`)
@@ -366,7 +366,7 @@ function populateSessionFields(){
 
     // Sensor information
     document.getElementById("temperatureField").innerHTML = (temperature !== null) ? temperature.toFixed(1) + ' ºC' : '--';
-    document.getElementById("pressureField").innerHTML = (pressure !== null) ? pressure.toFixed(1) + ' hPa' : '--';
+    document.getElementById("pressureField").innerHTML = (pressure !== null) ? pressure.toFixed(1) + ' mbar' : '--';
     document.getElementById("humidityField").innerHTML = (humidity !== null) ? humidity.toFixed(1) + ' %' : '--';
 
     // Position information

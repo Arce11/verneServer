@@ -3,10 +3,11 @@ import httpx
 import random
 
 # NOTA: trio Y httpx SON NECESARIOS PARA ESTE SCRIPT (NO LISTADOS EN requirements.txt)
-ROVER_ID = "virtual_verne123"
+ROVER_ID = "virtual_verne"
 ROVER_ADDRESS = "127.0.0.1"
-SESSION_ID = "asassdgfhhghhklksda5"
+SESSION_ID = "asassdgfhksda5"
 SERVER_ADDRESS = "http://127.0.0.1/"
+# SERVER_ADDRESS = "http://ec2-13-53-130-185.eu-north-1.compute.amazonaws.com/"
 
 session_params = {
     "session_id": SESSION_ID,
@@ -86,8 +87,11 @@ async def launch_virtual_rover():
             session_params['rssi'] = calculate_new_parameter(session_params['rssi'], 0, 1, -70, 10)
             print(f"\tUpdated rssi: {session_params['rssi']}")
             print(f"----> UPDATE SESSION: \t {session_params}")
-            ans = await client.put(SERVER_ADDRESS + "api/session/" + SESSION_ID + "/", json=session_params)
-            print(f"<---- ANSWER STATUS: {ans.status_code}")
+            try:
+                ans = await client.put(SERVER_ADDRESS + "api/session/" + SESSION_ID + "/", json=session_params)
+                print(f"<---- ANSWER STATUS: {ans.status_code}")
+            except httpx.RemoteProtocolError:
+                print("wtf")
             await trio.sleep(1)
 
 
