@@ -1,5 +1,6 @@
 // ------------------ GLOBAL STUFF ------------------------------------------
-const SERVER_ADDRESS = '127.0.0.1';
+//const SERVER_ADDRESS = '127.0.0.1';
+const SERVER_ADDRESS = 'ec2-13-53-130-185.eu-north-1.compute.amazonaws.com';
 const SESSION_URL = 'http://' + SERVER_ADDRESS + '/api/session/';
 const ROVER_URL = 'http://' + SERVER_ADDRESS + '/api/rover/';
 let aux = window.location.href.split("/");
@@ -43,6 +44,7 @@ let message;
 let temperature;
 let pressure;
 let humidity;
+let slope;
 
 // Position information
 let num_satellites;
@@ -115,6 +117,7 @@ function initializeSessionData(){
     temperature = null;
     pressure = null;
     humidity = null;
+    slope = null;
 
     // Position information
     num_satellites = null;
@@ -304,7 +307,7 @@ function updateMap(){
 }
 
 
-function loadInteractionSection(){  // TODO: Default page for empty rover address
+function loadInteractionSection(){
     let embeddedSection = document.getElementById("embeddedRover");
     embeddedSection.setAttribute("src", `http://${roverAddress}`)
 }
@@ -338,6 +341,7 @@ function handleSessionJSON(new_json){
     temperature = (new_json.temperature !== undefined) ? new_json.temperature : null;
     pressure = (new_json.pressure !== undefined) ? new_json.pressure : null;
     humidity = (new_json.humidity !== undefined) ? new_json.humidity : null;
+    slope = (new_json.slope !== undefined) ? new_json.slope : null;
     num_satellites = (new_json.num_satellites !== undefined) ? new_json.num_satellites : null;
     latitude = (new_json.latitude !== undefined) ? new_json.latitude : null;
     longitude = (new_json.longitude !== undefined) ? new_json.longitude : null;
@@ -368,6 +372,7 @@ function populateSessionFields(){
     document.getElementById("temperatureField").innerHTML = (temperature !== null) ? temperature.toFixed(1) + ' ºC' : '--';
     document.getElementById("pressureField").innerHTML = (pressure !== null) ? pressure.toFixed(1) + ' mbar' : '--';
     document.getElementById("humidityField").innerHTML = (humidity !== null) ? humidity.toFixed(1) + ' %' : '--';
+    document.getElementById("slopeField").innerHTML = (slope !== null) ? slope.toFixed(1) + ' º' : '--';
 
     // Position information
     document.getElementById("numSatellitesField").innerHTML = (latitude !== null) ? num_satellites.toFixed(0) : '--';

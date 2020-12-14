@@ -24,6 +24,7 @@ class Session(models.Model):
     temperature = models.FloatField(blank=True, null=True)
     pressure = models.FloatField(blank=True, null=True)
     humidity = models.FloatField(blank=True, null=True)
+    slope = models.FloatField(blank=True, null=True)
     num_satellites = models.IntegerField(blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
@@ -38,7 +39,7 @@ class Session(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     log = models.FileField(upload_to='logs/', null=True, blank=True)
 
-    LOG_FIELDS = ["timestamp", "temperature", "pressure", "humidity", "num_satellites", "latitude", "longitude",
+    LOG_FIELDS = ["timestamp", "temperature", "pressure", "humidity", "slope", "num_satellites", "latitude", "longitude",
                   "altitude", "battery", "rssi", "motor_current", "message", "session_state", "session_substate"]
 
     def __str__(self):

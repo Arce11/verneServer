@@ -15,6 +15,7 @@ session_params = {
     "temperature": 15,
     "pressure": 1013,
     "humidity": 70,
+    "slope": 15,
     "num_satellites": 4,
     "latitude": 43.5322,
     "longitude": -5.6611,
@@ -71,6 +72,8 @@ async def launch_virtual_rover():
             print(f"\tUpdated pressure: {session_params['pressure']}")
             session_params['humidity'] = calculate_new_parameter(session_params['humidity'], 0, 2, 0, 100)
             print(f"\tUpdated humidity: {session_params['humidity']}")
+            session_params['slope'] = calculate_new_parameter(session_params['slope'], 0, 2, -180, 180)
+            print(f"\tUpdated slope: {session_params['slope']}")
             session_params['latitude'] = calculate_new_parameter(session_params['latitude'], 0, 0.0005, 43.50, 43.5580)
             print(f"\tUpdated latitude: {session_params['latitude']}")
             session_params['longitude'] = calculate_new_parameter(session_params['longitude'], 0, 0.001, -5.9, -5.6)
